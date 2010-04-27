@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/../../../lib/action/BasesrPageChooserActions.class.php';
+require_once dirname(__FILE__).'/../../../lib/BasesrPageChooserActions.class.php';
 
 /**
  * srPageChooser actions.
