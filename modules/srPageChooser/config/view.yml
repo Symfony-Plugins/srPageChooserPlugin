@@ -1,5 +1,5 @@
 default:
   layout: bare
   
-  javascripts: [-tmpHover.js]
-  stylesheets: [-website.css, -templates.css]
+  javascripts: []#[-tmpHover.js]
+  stylesheets: []
