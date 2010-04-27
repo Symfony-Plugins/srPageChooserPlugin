@@ -1,0 +1,9 @@
+# srPageChooserPlugin
+
+This plugin is designed to work with the Apostrophe CMS by P'unk Ave. It allows
+developers to add an srPageChooserWidget to forms, for use with choosing links
+in slots, and also in the rich text slot.
+
+Contact the developer at ocelot [a] gmail.
+
+Copyright (c) 2010 SunRun Inc.

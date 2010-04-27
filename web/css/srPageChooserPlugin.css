@@ -1,0 +1,26 @@
+div.srwidgetformpagechooser-container {
+}
+span.srwidgetformpagechooser {
+	float: left;
+}
+span.srwidgetformpagechooser span.title,
+p.srwidgetformpagechooser-url span.title {
+	font-weight: bold;
+	display: block;
+}
+button.srwidgetformpagechooser {
+	float: right;
+}
+div.srwidgetformpagechooser-iframe-container {
+	background: #fff url(../images/loading.gif) no-repeat scroll center center;
+	border: 1px solid #aaa;
+	padding: 10px;
+	position: absolute;
+	z-index: 1000;
+}
+
+iframe.srwidgetformpagechooser {
+	overflow: auto;
+	height: 300px;
+	width: 340px;
+}
