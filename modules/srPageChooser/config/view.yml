@@ -1,6 +1,6 @@
 default:
   has_layout: true
-  layout: /plugins/srPageChooserPlugin/templates/bare
+  layout: %SF_PLUGINS_DIR%/srPageChooserPlugin/templates/bare
   
   javascripts: []
   stylesheets: []
