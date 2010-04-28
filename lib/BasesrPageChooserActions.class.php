@@ -27,6 +27,11 @@ abstract class BasesrPageChooserActions extends sfActions
 
      $root = aPageTable::retrieveBySlug('/');
 
-     $this->treeData = $root->getTreeJSONReadySR(false);
+     $this->treeData = $root->getTreeJSONReady(false);
+     $this->treeData = array($this->treeData);
+     
+     srPageChooserTools::addSlugToTreeData($this->treeData);
+     
+     $this->treeData = $this->treeData[0];
    }
 }
