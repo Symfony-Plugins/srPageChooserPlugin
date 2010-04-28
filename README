@@ -4,6 +4,137 @@ This plugin is designed to work with the Apostrophe CMS by P'unk Ave. It allows
 developers to add an srPageChooserWidget to forms, for use with choosing links
 in slots, and also in the rich text slot.
 
+## Plugin Contents
+
+The srPageChooserPlugin contains a number of classes that work together to allow easy choosing and managing of local site hyperlinks on an Apostrophe website.
+
+* `srPageChooser`: The module that displays a page tree for selecting the link, based on the Reorganize page tree built into Apostrophe.
+* `srWidgetFormPageChooser.class.php`: The best part about the srPageChooserPlugin is that it gives the developer a standard symfony form widget that can be dropped into a form like any other widget. 
+* `srValidatorSlug.class.php`: A validator used for validating page slugs chosen by the widget.
+* `_includeFormAssets.php`: A partial which must be included for the widget to work if it is being loaded by Ajax. This loads the necessary JavaScript and CSS for the form, as defined by `$form->getJavaScripts()` and `$form->getStyleSheets()`.  For an Apostrophe slot, the majority use case, this partial should be included in the `_editView.php` of the appropriate slot.
+
+## Installation
+
+The recommended method of installation is as an svn external.  To do this, starting in the your symfony project directory, navigate to your plugins directory:
+
+    $ cd plugins
+
+Then add in the externals definition to the plugins directory.
+
+    $ svn pe svn:externals .
+
+This will bring up your default text editor, perhaps populated with any existing svn:externals you're using.  If you're using the asandbox as a starting point, the externals definition for the `plugins` directory
+will look like this:
+
+    sfJqueryReloadedPlugin http://svn.symfony-project.com/plugins/sfJqueryReloadedPlugin/1.2/trunk
+    sfDoctrineGuardPlugin http://svn.symfony-project.com/plugins/sfDoctrineGuardPlugin/branches/1.3
+    sfDoctrineActAsTaggablePlugin http://svn.symfony-project.com/plugins/sfDoctrineActAsTaggablePlugin/trunk
+    sfSyncContentPlugin http://svn.symfony-project.com/plugins/sfSyncContentPlugin/trunk
+    sfTaskExtraPlugin http://svn.symfony-project.com/plugins/sfTaskExtraPlugin/branches/1.3
+    sfFeed2Plugin http://svn.symfony-project.com/plugins/sfFeed2Plugin/branches/1.2
+    sfWebBrowserPlugin http://svn.symfony-project.com/plugins/sfWebBrowserPlugin/trunk
+    apostrophePlugin http://svn.apostrophenow.org/plugins/apostrophePlugin/branches/1.3
+
+To the bottom of this list, add:
+
+    srPageChooserPlugin http://svn.symfony-project.com/plugins/srPageChooserPlugin/trunk
+
+And save the file.  To download the plugin files, do an SVN update in your plugins directory:
+
+    $ svn up
+
+We're done installing the plugin files.  Now, change back to your symfony project directory:
+
+    $ cd ..
+
+Next, you have to enable the `srPageChooser` module in your application's `settings.yml` file.  If the name of your application is, for example, `frontend`, then open `apps/frontend/config/settings.yml`, find the `enabled_modules` parameter, and add `srPageChooser` to the list.
+
+Next, clear your cache:
+
+    $ ./symfony cc
+    
+And publish the plugin's assets, so the JavaScript and CSS files are available to the frontend.
+
+    $ ./symfony plugin:publish-assets
+
+The srPageChooser is now ready to be used.
+
+## Using With Apostrophe Slots
+
+So now that it's installed, how do we use it in our Apostrophe slots?  Great question!  The first step is to create a new slot type that will utilize our fancy new widget, using the handy generate-slot-type task.  Let's start by creating a very simple slot that displays a link.
+
+    $ ./symfony apostrophe:generate-slot-type --application=frontend --type=SimpleLink
+    
+Now, you must follow the steps outlined by the "WHAT COMES NEXT" text of the symfony task:
+
+> 1. Generate your Doctrine classes:
+> ./symfony doctrine:build --all-classes
+> 
+> 2. Enable your new slot type's module, SimpleLinkSlot, in settings.yml
+> 
+> 3. Add your new slot type name, SimpleLink, to the a_slot_types list in app.yml
+> 
+> 4. ./symfony cc
+
+Let's add the new slot into a template so we can use it.
+
+Assuming we're starting from a fresh asandbox installation, we need to copy defaultTemplate.php from the `a` module of the `apostrophePlugin` directory into our application-level `a` module. Skip this step if you already have a template in your `apps/frontend/modules/a/templates` directory.
+
+    $ cp plugins/apostrophePlugin/modules/a/templates/defaultTemplate.php apps/frontend/modules/a/templates/
+    
+Add in the new slot `SimpleLink` into the `allowed_types` array of one of the areas in the template of your choice.
+
+Now, let's edit the form for the `SimpleLinkSlot` to add in an `sfWidgetFormPageChooser` widget.  Open up the file `apps/frontend/lib/form/SimpleLinkForm.class.php` and change the following lines from:
+
+    $this->setWidgets(array('text' => new sfWidgetFormTextarea()));
+    $this->setValidators(array('text' => new sfValidatorString(array('required' => false, 'max_length' => 100))));
+
+To:
+
+    $this->setWidgets(array(
+      'text' => new sfWidgetFormTextarea(),
+      'link' => new srWidgetFormPageChooser(),
+      ));
+    $this->setValidators(array(
+      'text' => new sfValidatorString(array('max_length' => 100)),
+      'link' => new srValidatorSlug(),
+    ));
+    
+Take note that `srWidgetFormPageChooser` and `srValidatorSlug` begin with `sr`, not `sf` --- `sr` stands for [http://www.sunrunhome.com](SunRun, Inc.), the sponsor of this plugin and the nation's leading residential solar company.
+
+Next (and this is an important, easy-to-forget step), we need to add in a line of code into the `_editView.php` partial of `SimpleLinkSlot` that will ensure that the necessary JavaScript and CSS files for the srWidgetFormPageChooser are loaded.  Bring up `apps/frontend/modules/SimpleLinkSlot/templates/_editView.php` in your text editor and change it from:
+
+    <?php // Just echo the form. You might want to render the form fields differently ?>
+    <?php echo $form ?>
+    
+To:
+
+    <?php // Just echo the form. You might want to render the form fields differently ?>
+    <?php echo $form ?>
+    <?php include_partial('srPageChooser/includeFormAssets', array('form' => $form)) ?>
+    
+Load up a page that has the `SimpleLink` slot available to it, click *Add Slot*, and then choose *Simple Link*.  Click *Edit* and you will see two fields, a textarea labeled *Text* and a button labeled *Link* with the text "Select a Link".  Clicking this button displays an iframe showing the site's page tree.  Click on one of the pages to select it as the target for the link.  This populates the `link` form field with the slug of the page.  For example, if you click on a page titled "Contact" in the page tree, the `link` field will be populated with "/contact".  Plus, the title of the page and the slug will be displayed near the "Select a Link" button so you can know which page it points to.
+
+Finally, let's edit the `_normalView.php` template to display our newly selected link. Open up `apps/frontend/modules/SimpleLinkSlot/templates/_normalView.php` and change the code from:
+
+    <?php include_partial('a/simpleEditButton', array('name' => $name, 'pageid' => $pageid, 'permid' => $permid)) ?>
+    <?php if (isset($values['text'])): ?>
+      <h4><?php echo htmlspecialchars($values['text']) ?></h4>
+    <?php endif ?>
+    
+To:
+
+    <?php include_partial('a/simpleEditButton', array('name' => $name, 'pageid' => $pageid, 'permid' => $permid)) ?>
+    <?php if (isset($values['text']) && isset($values['link'])): ?>
+      <a href="<?php echo $values['link'] ?>"><?php echo htmlspecialchars($values['text']) ?></a>
+    <?php endif ?>
+
+And that's it!
+
+## Using with FCKEditor and aRichTextSlot
+
+TODO
+
 Contact the developer at ocelot [a] gmail.
 
 Copyright (c) 2010 SunRun Inc.
