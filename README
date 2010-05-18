@@ -133,7 +133,41 @@ And that's it!
 
 ## Using with FCKEditor and aRichTextSlot
 
-TODO
+Having the ability to graphically insert links using the Rich Text slot, without ever having to type a URL, is one of the most useful features of this plugin.  Luckily, it's super easy to implement once the plugin is installed.  You just need to replace one FCKEditor HTML file with the version included in this plugin.
+
+By default, `asandbox` is setup to use the `fckeditor` files bundled with `apostrophePlugin`, which are located at:
+
+    SF_WEB_DIR/apostrophePlugin/js/fckeditor/
+    
+The file we are particularly interested in is:
+
+    SF_WEB_DIR/apostrophePlugin/js/fckeditor/editor/dialog/fck_link.html
+    
+Replace this with the version included with this plugin, located at:
+
+    web/js/fckeditor/editor/dialog/fck_link.html
+    
+If you would like to keep the FCKEditor files bundled with `apostrophePlugin` intact (recommended), copy the FCKEditor files it bundles into your own web directory, like:
+
+    $ cp -R web/apostrophePlugin/js/fckeditor web/js/
+    
+You'll also want to delete the SVN stubs in this new folder if you plan to commit it to your repo:
+
+    $ cd web/js/fckeditor/
+    $ find . -name .svn | xargs rm -rf
+    
+Now, if you haven't already, copy in the `srPageChooserPlugin` version of `fck_link.html` into this new directory:
+
+    $ cp plugins/srPageChooserPlugin/web/js/fckeditor/editor/dialog/fck_link.html web/js/fckeditor/editor/dialog/
+    
+Finally, to tell Apostrophe to use our custom FCKEditor files, change the `rich_text_fck_js_dir` setting in `apps/frontend/config/settings.yml` to reflect the new location:
+
+    rich_text_fck_js_dir:   web/js/fckeditor
+    
+Clear your cache, and that's it!
+
+    $ ./symfony cc
+
 
 Contact the developer at ocelot [a] gmail.
 
