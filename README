@@ -155,6 +155,7 @@ You'll also want to delete the SVN stubs in this new folder if you plan to commi
 
     $ cd web/js/fckeditor/
     $ find . -name .svn | xargs rm -rf
+    $ cd ../../..
     
 Now, if you haven't already, copy in the `srPageChooserPlugin` version of `fck_link.html` into this new directory:
 
@@ -162,12 +163,13 @@ Now, if you haven't already, copy in the `srPageChooserPlugin` version of `fck_l
     
 Finally, to tell Apostrophe to use our custom FCKEditor files, change the `rich_text_fck_js_dir` setting in `apps/frontend/config/settings.yml` to reflect the new location:
 
-    rich_text_fck_js_dir:   web/js/fckeditor
+    rich_text_fck_js_dir:   js/fckeditor
     
 Clear your cache, and that's it!
 
     $ ./symfony cc
 
+If you don't see the changes, make sure to clear your browser's cache!
 
 Contact the developer at ocelot [a] gmail.
 
