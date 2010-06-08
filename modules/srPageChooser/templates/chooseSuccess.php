@@ -73,7 +73,7 @@ $(function() {
       renameable: false,
       deletable: false,
       creatable: false,
-      draggable: 'all',
+      draggable: 'none',
       dragrules: 'all'
     },
     callback: {
