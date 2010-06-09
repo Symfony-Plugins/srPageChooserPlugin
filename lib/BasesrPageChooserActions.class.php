@@ -20,7 +20,7 @@ abstract class BasesrPageChooserActions extends sfActions
      // manually disable the web debug toolbar cause it screws up the small screen real estate
      sfConfig::set('sf_web_debug', false);
 
-     if ( ! $this->getUser()->hasCredential('cms_admin'))
+     if ( ! aTools::isPotentialEditor())
      {
        return 'InvalidCredentials';
      }
