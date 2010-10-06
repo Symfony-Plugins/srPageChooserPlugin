@@ -9,8 +9,7 @@
  * @version    SVN: $$
  */
 class srWidgetFormPageChooser extends sfWidgetForm
-{
-  
+{  
   /**
    * Constructor.
    *
@@ -29,6 +28,7 @@ class srWidgetFormPageChooser extends sfWidgetForm
         
     $this->addOption('type', 'hidden');
     $this->addOption('buttonText', 'Select a Link');
+    $this->addOption('class', 'srwidgetformpagechooser');
   }
 
   /**
@@ -43,17 +43,19 @@ class srWidgetFormPageChooser extends sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    $attributes = array_merge(array('span' => array(), 'input' => array(), 'button' => array()), $attributes);
+    $attributes = array_merge_recursive(array(
+      'span' => array('class' => $this->getOption('class')),
+      'input' => array('type' => $this->getOption('type'), 'name' => $name, 'value' => $value, 'class' => $this->getOption('class')),
+      'button' => array('type' => 'button', 'class' => $this->getOption('class')),
+      'div' => array('class' => $this->getOption('class').'-container'),
+    ), $attributes);
     
-    $spanTag = $this->renderContentTag('span', $value, array_merge(array('class' => 'srwidgetformpagechooser'), $attributes['span']));
-    
-    $inputTag = $this->renderTag('input', array_merge(array('type' => $this->getOption('type'), 'name' => $name, 'value' => $value, 'class' => 'srwidgetformpagechooser'), $attributes['input']));
-    
-    $buttonTag = $this->renderContentTag('button', $this->getOption('buttonText'), array_merge(array('class' => 'srwidgetformpagechooser', 'type' => 'button'), $attributes['button']));
-    
+    $spanTag = $this->renderContentTag('span', $value, $attributes['span']);
+    $inputTag = $this->renderTag('input', $attributes['input']);
+    $buttonTag = $this->renderContentTag('button', $this->getOption('buttonText'), $attributes['button']);
     $iframe = self::renderIframe();
     
-    return '<div class="srwidgetformpagechooser-container">' . $spanTag . $inputTag . $buttonTag . $iframe . '</div>';
+    return $this->renderContentTag('div', $spanTag.$inputTag.$buttonTag.$iframe, $attributes['div']);
   }
   
   static public function renderIframe()
