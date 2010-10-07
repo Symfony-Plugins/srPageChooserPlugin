@@ -97,7 +97,7 @@ To:
       ));
     $this->setValidators(array(
       'text' => new sfValidatorString(array('max_length' => 100)),
-      'link' => new srValidatorSlug(),
+      'link' => new aValidatorSlug(array('allow_slashes' => true, 'require_leading_slash' => true)),
     ));
     
 Take note that `srWidgetFormPageChooser` and `srValidatorSlug` begin with `sr`, not `sf` --- `sr` stands for [http://www.sunrunhome.com](SunRun, Inc.), the sponsor of this plugin and the nation's leading residential solar company.
