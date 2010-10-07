@@ -18,8 +18,8 @@
 		currentContainer: null,
 		
 		init: function() {
-			$(srPageChooserWidget.elButton).click(function(){
-				srPageChooserWidget.clickHandler(this)
+			$(srPageChooserWidget.elButton).live('click', function(){
+				srPageChooserWidget.clickHandler(this);
 			});
 			
 			if (!$(srPageChooserWidget.elIframe).length) {
@@ -41,7 +41,7 @@
 			var h = viewportHeight/2 - c.height()/2;
 			var w = $(window).width()/2 - c.width()/2;
 			var offset = {
-				top: $(window).scrollTop(), //h > 0 ? h : 0,
+				top: $(window).scrollTop()+20, //h > 0 ? h : 0,
 				left: w > 0 ? w : 0
 			}
 			if (i.attr('src') === '') {
@@ -55,7 +55,7 @@
 		},
 		
 		doneHandler: function(elButtonDone) {
-			$(srPageChooserWidget.elIframeContainer).css().hide();
+			$(srPageChooserWidget.elIframeContainer).hide();
 		},
 		
 		pageSelectHandler: function(pageInfo, baseUrl) {
