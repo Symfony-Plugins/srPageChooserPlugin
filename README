@@ -10,7 +10,6 @@ The srPageChooserPlugin contains a number of classes that work together to allow
 
 * `srPageChooser`: The module that displays a page tree for selecting the link, based on the Reorganize page tree built into Apostrophe.
 * `srWidgetFormPageChooser.class.php`: The best part about the srPageChooserPlugin is that it gives the developer a standard symfony form widget that can be dropped into a form like any other widget. 
-* `srValidatorSlug.class.php`: A validator used for validating page slugs chosen by the widget.
 * `_includeFormAssets.php`: A partial which must be included for the widget to work if it is being loaded by Ajax. This loads the necessary JavaScript and CSS for the form, as defined by `$form->getJavaScripts()` and `$form->getStyleSheets()`.  For an Apostrophe slot, the majority use case, this partial should be included in the `_editView.php` of the appropriate slot.
 
 ## Installation
@@ -48,6 +47,8 @@ We're done installing the plugin files.  Now, change back to your symfony projec
     $ cd ..
 
 Next, you have to enable the `srPageChooser` module in your application's `settings.yml` file.  If the name of your application is, for example, `frontend`, then open `apps/frontend/config/settings.yml`, find the `enabled_modules` parameter, and add `srPageChooser` to the list.
+
+Additionally, you may have to add srPageChooserPlugin to the list of enabled plugins in either `/config/ProjectConfiguration.class.php` or `/apps/frontend/config/frontendConfiguration.class.php`.
 
 Next, clear your cache:
 
@@ -100,7 +101,7 @@ To:
       'link' => new aValidatorSlug(array('allow_slashes' => true, 'require_leading_slash' => true)),
     ));
     
-Take note that `srWidgetFormPageChooser` and `srValidatorSlug` begin with `sr`, not `sf` --- `sr` stands for [http://www.sunrunhome.com](SunRun, Inc.), the sponsor of this plugin and the nation's leading residential solar company.
+Take note that `srWidgetFormPageChooser` begins with `sr`, not `sf` --- `sr` stands for [http://www.sunrunhome.com](SunRun, Inc.), the sponsor of this plugin and the nation's leading residential solar company.
 
 Next (and this is an important, easy-to-forget step), we need to add in a line of code into the `_editView.php` partial of `SimpleLinkSlot` that will ensure that the necessary JavaScript and CSS files for the srWidgetFormPageChooser are loaded.  Bring up `apps/frontend/modules/SimpleLinkSlot/templates/_editView.php` in your text editor and change it from:
 
@@ -117,14 +118,15 @@ Load up a page that has the `SimpleLink` slot available to it, click *Add Slot*,
 
 Finally, let's edit the `_normalView.php` template to display our newly selected link. Open up `apps/frontend/modules/SimpleLinkSlot/templates/_normalView.php` and change the code from:
 
-    <?php include_partial('a/simpleEditButton', array('name' => $name, 'pageid' => $pageid, 'permid' => $permid)) ?>
-    <?php if (isset($values['text'])): ?>
-      <h4><?php echo htmlspecialchars($values['text']) ?></h4>
-    <?php endif ?>
+	<?php include_partial('a/simpleEditButton', array('name' => $name, 'slot' => $slot, 'pageid' => $pageid, 'permid' => $permid)) ?>
+	<?php if (isset($values['text'])): ?>
+	  <h4><?php echo htmlspecialchars($values['text']) ?></h4>
+	<?php endif ?>
+
     
 To:
 
-    <?php include_partial('a/simpleEditButton', array('name' => $name, 'pageid' => $pageid, 'permid' => $permid)) ?>
+	<?php include_partial('a/simpleEditButton', array('name' => $name, 'slot' => $slot, 'pageid' => $pageid, 'permid' => $permid)) ?>
     <?php if (isset($values['text']) && isset($values['link'])): ?>
       <a href="<?php echo $values['link'] ?>"><?php echo htmlspecialchars($values['text']) ?></a>
     <?php endif ?>
