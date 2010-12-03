@@ -1,4 +1,4 @@
-<?php use_helper('jQuery') ?>
+<?php use_helper('a') ?>
 <?php $treeData = isset($treeData) ? $sf_data->getRaw('treeData') : null ?>
 
 <?php sfContext::getInstance()->getResponse()->addJavascript('/apostrophePlugin/js/jsTree/_lib/css.js') ?>
