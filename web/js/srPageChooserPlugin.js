@@ -28,7 +28,7 @@
 		},
 		
 		createIframe: function(){
-			var ifrm = $('<div class="srwidgetformpagechooser-iframe-container" style="display:none"><iframe id="iPageChooser" frameborder="0" scrolling="no" src="" class="srwidgetformpagechooser"></iframe><p class="srwidgetformpagechooser-url"></p><button class="srwidgetformpagechooser-done" type="button">Ok</button></div>');
+			var ifrm = $('<div class="srwidgetformpagechooser-iframe-container" style="display:none"><iframe id="iPageChooser" frameborder="0" src="" class="srwidgetformpagechooser"></iframe><p class="srwidgetformpagechooser-url"></p><button class="srwidgetformpagechooser-done" type="button">Ok</button></div>');
 			ifrm.appendTo('body');
 		},
 		

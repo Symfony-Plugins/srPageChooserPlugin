@@ -24,3 +24,7 @@ iframe.srwidgetformpagechooser {
 	height: 300px;
 	width: 340px;
 }
+
+#srPageChooserPlugin-body {
+  overflow: auto;
+}
